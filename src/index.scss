@@ -17,4 +17,29 @@
 	box-sizing: border-box;
 }
 
-body {}
+body {
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+input {
+	background-color: #F6F8FB;
+
+
+	border: none;
+	outline: none;
+
+	&:focus {
+		border: none;
+		outline: none;
+	}
+}
+
+.container-input {
+	@apply max-w-full flex gap-2 rounded-md border-[1px] border-[#E0E0E0] bg-[#F6F8FB] p-2;
+
+	&:focus-within {
+		@apply border-blue-400;
+	}
+
+}

@@ -1,0 +1,42 @@
+.uploader-bar {
+
+	position: relative;
+	padding-bottom: 2em;
+
+
+
+	&::before {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 100%;
+
+		@apply border-2 border-[#F2F2F2] rounded-lg;
+	}
+
+
+	&::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		width: 25%;
+
+		animation: uploader-anim 1500ms linear infinite alternate;
+
+		@apply border-2 border-[#2F80ED] rounded-lg;
+	}
+}
+
+@keyframes uploader-anim {
+	0% {
+		left: 0;
+	}
+
+	100% {
+		left: 75%;
+	}
+}
