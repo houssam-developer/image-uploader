@@ -1,10 +1,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 import './App.scss';
+import { apiService } from './services/ApiService';
 
 
 function App() {
+	const [imageUploaded, setImageUploaded] = useState(false);
 	const btnSubmitRef = useRef();
+	const previewImgRef = useRef();
 
 	function handleOnDragoverEvent(e) {
 		e.preventDefault();
@@ -18,16 +21,26 @@ function App() {
 
 	function handleFormSubmit(e) {
 		e.preventDefault();
-		console.log(`📡 handleFormSubmit()`, e);
+		const formData = new FormData(e.target);
+
+		console.log(`📡 handleFormSubmit() #formData: `, formData);
+
+		Array.from(formData.entries()).forEach(it => { console.log('🔁 #it:', it) });
+		const fileArray = Array
+			.from(formData.entries())
+			.filter(it => it[0] === 'myfile');
+
+		console.log(`📦 #fileArray: `, fileArray);
+
+		apiService.uploadFile(formData);
+		//previewImgRef.src = URL.createObjectURL(fileArray[1]);
 	}
 
 	function handleBtnChooseFileEvent(e) {
 		e.preventDefault();
-		console.log(`📡 handleBtnChooseFileEvent()`, e);
+		//console.log(`📡 handleBtnChooseFileEvent()`, e);
 		btnSubmitRef.current.click();
 	}
-
-
 
 	return (
 		<div className="">
@@ -44,9 +57,14 @@ function App() {
 				<input onChange={handleBtnChooseFileEvent} type="file" name='myfile' id='myFile' placeholder='file' hidden />
 
 				<label htmlFor="myFile" className="bg-[#2F80ED] text-white px-4 py-3 rounded-md font-['Noto Sans']">Choose a file</label>
+
+				{imageUploaded && <img ref={previewImgRef} src="./images/image.svg" alt="" />}
+
 			</form>
 		</div>
 	)
 }
+
+
 
 export default App;
