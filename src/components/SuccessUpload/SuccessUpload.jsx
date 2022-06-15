@@ -34,7 +34,7 @@ function SuccessUpload({ remoteImgUrl }) {
 				<h2 className="text-md sm:text-lg font-medium text-[#4f4f4f]" >Uploaded Successfully!</h2>
 			</div>
 			<div className='p-4 max-w-full rounded-md'>
-				<img className='max-w-max max-h-[50vh] object-cover' src={remoteImgUrl} alt="picture uploaded" />
+				<img className='max-w-full max-h-[50vh] object-cover' src={remoteImgUrl} alt="picture uploaded" />
 			</div>
 			<div className="container-input" >
 				<input ref={inputLinkRef} value={inputLinkValue} onChange={handleInputLinkOnChangeEvent} className='flex-grow border-2 overflow-x-hidden text-xs font-medium text-[#4f4f4f]' type="text" />
