@@ -3,18 +3,26 @@ import axios from "axios";
 
 export const apiService = (function () {
 
-	const API_URL = 'http://localhost:8080/upload';
+	const API_BASE_URL = 'https://uploader-image-backend.herokuapp.com'
+	const API_UPLOAD_URL = `${API_BASE_URL}/upload`;
 
 
+	function handleOnUploadProgressEvent(progressEvent) {
+		const { loaded, total } = progressEvent;
+		let percent = Math.floor((loaded * 100) / total);
+
+		console.log(`🔥 handleOnUploadProgressEvent() ${loaded}kb of ${total}kb | ${percent}%`);
+	}
 
 	function uploadFile(formData) {
-		console.log(`📥 uploadFile()`);
+		console.log(`📥 uploadFile() attempt...`);
 
 		try {
 			return axios.post(
-				API_URL,
+				API_UPLOAD_URL,
 				formData,
 				{
+					onUploadProgress: (e) => handleOnUploadProgressEvent(e),
 					params: {
 						mode: 'cors',
 						cache: 'no-cache',
@@ -32,8 +40,13 @@ export const apiService = (function () {
 		}
 	}
 
+	function getApiUrl() {
+		return API_BASE_URL;
+	}
+
 	return {
-		uploadFile
+		uploadFile,
+		getApiUrl
 	}
 
 })();

@@ -1,0 +1,8 @@
+.container-input {
+	@apply w-full rounded-md border-[1px] border-[#E0E0E0] bg-[#F6F8FB] p-2 flex gap-2;
+
+	&:focus-within {
+		@apply border-blue-400;
+	}
+
+}

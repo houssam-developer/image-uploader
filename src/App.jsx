@@ -25,9 +25,8 @@ function App() {
 	}
 
 	function checkUploadState(response) {
-		console.log(`📡 response: `, response);
 		if (response.statusText === 'OK') {
-			setRemoteImageUrl(`http://localhost:8080/${response.data.file}`);
+			setRemoteImageUrl(`${apiService.getApiUrl()}/${response.data.file}`);
 			setIsImageUploaded(true);
 		}
 		else {
@@ -91,11 +90,5 @@ function App() {
 		);
 	}
 }
-
-
-
-
-
-
 
 export default App;
