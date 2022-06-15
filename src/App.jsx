@@ -2,94 +2,74 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.scss';
 import { apiService } from './services/ApiService';
-
-import { MdCheckCircle } from "react-icons/md";
-
+import SuccessUpload from './components/SuccessUpload/SuccessUpload';
+import UploaderBar from './components/UploaderBar/UploaderBar';
 
 
 function App() {
 	const [isImageUploading, setIsImageUploading] = useState(false);
 	const [isImageUploaded, setIsImageUploaded] = useState(false);
-	const [imageUploadedFile, setimageUploadedFile] = useState();
+	const [remoteImageUrl, setRemoteImageUrl] = useState('');
 	const [previewImageUploaded, setPreviewImageUploaded] = useState();
 
 	const btnSubmitRef = useRef();
-	const previewImgRef = useRef();
-	const containerUploaderRef = useRef();
 	const inputFileRef = useRef();
 
-	function handleOnDragoverEvent(e) {
-		e.preventDefault();
-	}
+	function handleOnDragoverEvent(e) { e.preventDefault(); }
 
 	function handleOnDropEvent(e) {
 		e.preventDefault();
-		let data = e.dataTransfer.getData('text');
-		const targetFile = e.dataTransfer.files[0];
-		console.log(`📡 #data: `, e.dataTransfer);
 
 		inputFileRef.current.files = e.dataTransfer.files;
 		btnSubmitRef.current.click();
-
 	}
 
 	function checkUploadState(response) {
 		console.log(`📡 response: `, response);
-		if (response['status']) {
-			console.log(`📡 TRUE`);
+		if (response.statusText === 'OK') {
+			setRemoteImageUrl(`http://localhost:8080/${response.data.file}`);
 			setIsImageUploaded(true);
 		}
-		else { console.log(`📡 FALSE`); }
+		else {
+			setIsImageUploading(false);
+			alert(`Image Not Uploaded - ${response.status}`);
+		}
 	}
 
 	function handleFormSubmit(e) {
 		e.preventDefault();
+
 		const formData = new FormData(e.target);
-
-		console.log(`📡 handleFormSubmit() #formData: `, formData);
-
-		Array.from(formData.entries()).forEach(it => { console.log('🔁 #it:', it) });
 		const fileArray = Array
 			.from(formData.entries())
 			.filter(it => it[0] === 'myfile');
 
-		console.log(`📦 #fileArray: `, fileArray);
-
-		//previewImgRef.current.src = URL.createObjectURL(fileArray[1]);
-
 		setIsImageUploading(true);
-
-		let reader = new FileReader();
-		reader.onload = (e) => {
-			console.log(`📦 #e.target.result: `, e);
-			setPreviewImageUploaded(e.target.result);
-		}
-
-		reader.readAsDataURL(inputFileRef.current.files[0]);
-
 
 		apiService
 			.uploadFile(formData)
 			.then(response => checkUploadState(response))
-			.catch(err => console.log(`🚩 Error: `, err));
+			.catch(err => {
+				console.log(`🚩 Error: `, err);
+				setIsImageUploading(false);
+				alert(`Uploading Image Failed - ${err.message}`)
+			});
 	}
-
 
 	function handleBtnChooseFileEvent(e) {
 		e.preventDefault();
-		//console.log(`📡 handleBtnChooseFileEvent()`, e);
 		btnSubmitRef.current.click();
 	}
 
 	return (
-		<div className="">
-			{isImageUploaded ?
-				<SuccessUpload srcImg={previewImageUploaded} />
-				:
-				isImageUploading ? <Uploader /> : <FormFile />
+		<>
+			{
+				isImageUploaded ? <SuccessUpload remoteImgUrl={remoteImageUrl} />
+					:
+					isImageUploading ? <UploaderBar /> : <FormFile />
 
 			}
-		</div>
+		</>
 	)
 
 	function FormFile() {
@@ -110,38 +90,9 @@ function App() {
 			</form>
 		);
 	}
-
-	function Uploader() {
-		return (
-			<div className="m-4 shadow rounded-lg flex items-center" >
-				<div className="p-8 flex flex-col  w-full" >
-					<h2 className="text-lg font-sans font-medium text-[#4f4f4f]" >Uploading...</h2>
-					<div ref={containerUploaderRef} className='uploader-bar'></div>
-				</div>
-			</div>
-		);
-	}
-
-	function SuccessUpload({ srcImg }) {
-		//previewImgRef.current.src = e.target.result;
-
-		return (
-			<div className="p-8 flex flex-col gap-2 md:gap-8 items-center" >
-				<div className='flex flex-col gap-4 md:gap-6 items-center'>
-					<p><MdCheckCircle size={30} fill={'#219653'} /></p>
-					<h2 className="text-md sm:text-lg font-medium text-[#4f4f4f]" >Uploaded Successfully!</h2>
-				</div>
-				<div className='p-4 max-w-full border-[1px] border-[#f2f2f2] rounded-md'>
-					<img src={srcImg} alt="picture uploaded" />
-				</div>
-				<div className="container-input" >
-					<input className='flex-grow border-2 overflow-x-hidden text-xs font-medium text-[#4f4f4f]' type="text" placeholder='https://images.yourdomain.com/photo-1496950866446-325...' />
-					<button className='min-w-max bg-[#2F80ED] rounded-md py-3 px-6 text-white font-medium text-[10px] sm:text-sm md:text-base'>Copy Link</button>
-				</div>
-			</div>
-		);
-	}
 }
+
+
 
 
 
