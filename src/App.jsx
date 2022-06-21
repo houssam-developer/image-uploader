@@ -68,6 +68,10 @@ function App() {
 					isImageUploading ? <UploaderBar /> : <FormFile />
 
 			}
+
+			<footer className='flex justify-center  mt-8'>
+				<p className="text-center text-[#444] p-4 ">created by <span className='font-medium text-[#111]'>houssam-developer</span> - devChallenges.io</p>
+			</footer>
 		</>
 	)
 

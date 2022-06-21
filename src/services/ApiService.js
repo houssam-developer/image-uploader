@@ -3,7 +3,8 @@ import axios from "axios";
 
 export const apiService = (function () {
 
-	const API_BASE_URL = 'https://uploader-image-backend.herokuapp.com'
+	const API_BASE_URL = 'https://uploader-image-backend.herokuapp.com';
+	//const API_BASE_URL = 'http://localhost:8080';
 	const API_UPLOAD_URL = `${API_BASE_URL}/upload`;
 
 
